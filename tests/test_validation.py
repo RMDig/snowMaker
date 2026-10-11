@@ -81,6 +81,10 @@ def fracture(result, taps = None, fracture_index = 1, test_index = 1, **override
     (ect.SPEC, fracture('P', 12, ect_failure_depth_cm = -3.0), "depth below surface is positive"),
     (layers.SPEC, layer(1, 0, 10, hand_hardness = 'soft'), "not a hand hardness"),
     (layers.SPEC, layer(1, 0, 10, hand_hardness = 'f'), "case matters"),
+    (layers.SPEC, layer(1, 0, 10, hand_hardness = 'i'), "case matters for ice too"),
+    (layers.SPEC, layer(1, 0, 10, hand_hardness = '4F+'), "sub-grades are not in the domain"),
+    (layers.SPEC, layer(1, 0, 10, hand_hardness = 'ice'), "ice is the code I"),
+    (ect.SPEC, fracture('P', 12, ect_hardness_below = '1F-'), "sub-grades are not in the domain"),
     (layers.SPEC, layer(1, 0, 10, grain_type = 'facets'), "not an ICSSG code"),
     (layers.SPEC, layer(1, 0, 10, lwc = 'wet'), "not an LWC class"),
     (cores.SPEC, core(1, recovery_quality = 'whole'), "not a recovery quality"),
@@ -102,6 +106,17 @@ def fracture(result, taps = None, fracture_index = 1, test_index = 1, **override
 def test_out_of_domain_values_rejected_not_coerced(spec, raw, reason):
     with pytest.raises(schema.SchemaError):
         spec.normalize(raw, context = f"{reason}: ")
+
+
+def test_hand_hardness_is_icssg_softest_to_hardest_with_ice_last():
+    # AvApp mirrors this tuple code for code, so its order is part of the contract
+    assert layers.HAND_HARDNESS == ("F", "4F", "1F", "P", "K", "I")
+
+
+def test_ice_is_accepted_for_layers_and_both_ect_hardness_fields():
+    assert layers.SPEC.normalize(layer(1, 0, 10, hand_hardness = 'I'))['hand_hardness'] == 'I'
+    values = ect.SPEC.normalize(fracture('P', 12, ect_hardness_above = 'I', ect_hardness_below = 'I'))
+    assert (values['ect_hardness_above'], values['ect_hardness_below']) == ('I', 'I')
 
 
 def test_unknown_column_is_rejected_so_a_typo_cannot_vanish():

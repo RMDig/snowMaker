@@ -125,3 +125,18 @@ have no images; the pit-level values the image table repeats agree with
    files present but empty, not declared as `load_dataset()` configs until the
    first record lands (`card.tables_with_rows()` decides which configs the
    front matter declares).
+
+## Changes since v2
+
+- **2026-10-11 — `I` (ice) added to hand hardness. Additive, non-breaking.**
+  `layers.hand_hardness`, `ect.ect_hardness_above` and `ect.ect_hardness_below`
+  accept `F` / `4F` / `1F` / `P` / `K` / `I`, softest to hardest per ICSSG
+  (Fierz et al. 2009). The columns stay `Value("string")`, so no feature type
+  changes, and no existing row changes (`layers` and `ect` hold no rows yet).
+  There is no schema version number to bump. The ICSSG `+`/`−` sub-grades
+  (`4F+`, `1F−`) are still rejected. The domain is stored raw: nothing here
+  encodes hardness as an ordinal. How an ice layer enters any breakability
+  feature is an open modelling decision for the owner (AvApp plan 49 H3).
+  Consumers that copy the tuple must add `I` too, or they will reject valid
+  rows: AvApp `field_vocabulary.dart` `kHandHardness`, and snowGradient
+  `src/snowgradient/ect.py` `HARDNESS`.
