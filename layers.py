@@ -18,8 +18,10 @@ depth hoar is the archetypal fatal Colorado configuration.
 
 from schema import Field, SchemaError, TableSpec
 
-# ICSSG hand hardness (Fierz et al. 2009), softest to hardest.
-HAND_HARDNESS = ("F", "4F", "1F", "P", "K")
+# ICSSG hand hardness (Fierz et al. 2009), softest to hardest. "I" is ice, too
+# hard to push a knife blade into. The +/- sub-grades (e.g. "4F+") are not in
+# the domain and are rejected.
+HAND_HARDNESS = ("F", "4F", "1F", "P", "K", "I")
 
 # ICSSG main grain classes.
 GRAIN_TYPES = ("PP", "DF", "RG", "FC", "DH", "SH", "MF", "IF", "MM")
