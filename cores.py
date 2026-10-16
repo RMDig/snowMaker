@@ -8,9 +8,12 @@ sampled still gets a row, with ``depth_skipped_reason`` set, so "not sampled"
 never collapses into "sampled and found nothing".
 
 ``breakability_field_count`` is the number of pieces the core came out in,
-**counted at extraction**. The legacy image-table ``segment`` numbering is a
-photography artefact -- how many pieces were photographed for profile imaging --
-and is a different measurement; nothing here is derived from it.
+**counted at extraction**. The legacy image-table ``segment`` numbers the
+natural pieces a core broke into at extraction, each of which was photographed,
+so the count of distinct segments is the only breakability record legacy cores
+have. It is not copied here: for four legacy cores the numbering differs
+between image types, and whether handling between the pit wall and the camera
+added breaks was never recorded. Legacy rows keep this field null.
 
 ``recovery_quality`` separates "came out whole" from "fell apart and could not
 be counted", which the image table conflates.
