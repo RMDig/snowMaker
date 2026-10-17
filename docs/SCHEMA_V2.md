@@ -12,7 +12,11 @@ snowGradient's post-mortem on the breakability campaign named the causes:
    wall horizontally), not a weak-layer count, and it is dominated by depth.
 2. `collector` had one distinct value across all 845 core rows.
 3. Site 0's "advised not to use" lived in free text and was used anyway.
-4. `segment_count` is a photography artefact, not a field count.
+4. Breakability had no field of its own. It could only be read off the image
+   table's `segment` numbering, and for four cores that numbering differs
+   between image types. (This item first called `segment` "a photography
+   artefact, not a field count". That was wrong: segments are the natural
+   pieces a core broke into at extraction, each photographed.)
 5. Everything coarser than an image was repeated across image rows, so the
    grain of a value was out-of-band knowledge and n was inflatable by ~100x.
 
@@ -99,7 +103,11 @@ in `ect.jsonl`. To find untested columns: `(site, column)` pairs present in
   `disintegrated` (could not be counted) and `not_recovered` carry none.
   Legacy cores have `null` — not recorded — which is none of the four.
 - `breakability_field_count` is counted at extraction. It is **not** derived
-  from `segment`, and nothing in the pipeline derives it.
+  from `segment`, and nothing in the pipeline derives it, so it is null for
+  every legacy core. For legacy breakability, count the distinct positive
+  `segment` values of a core's `datatype == "core"` images, and say which
+  image type you counted from: (0,1,1), (2,1,2), (2,1,5) and (5,1,3) as
+  `(site, column, core)` give different counts from magnified profiles.
 - ECT `PV` has no tap. `P`/`N` need `ect_taps` in 1–30 and a tap convention.
   `X` is one row and the only row of its test.
 
